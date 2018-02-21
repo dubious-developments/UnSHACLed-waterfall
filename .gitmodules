@@ -1,0 +1,3 @@
+[submodule "UnSHACLed-server"]
+	path = UnSHACLed-server
+	url = https://github.com/dubious-developments/UnSHACLed-server
