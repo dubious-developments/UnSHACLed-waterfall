@@ -11,15 +11,16 @@ addons:
   ssh_known_hosts: $DEPLOY_HOST
 
 install:
-  # Check to make sure that the server actually builds.
-  - ./build-server.sh
-
   # We need a newer version (1.06) of sshpass than the default
   # apt repository offers (that is, 1.05). So we'll just build
   # it from source.
   - wget https://netix.dl.sourceforge.net/project/sshpass/sshpass/1.06/sshpass-1.06.tar.gz
   - tar -xvzf sshpass-1.06.tar.gz
   - pushd sshpass-1.06; ./configure && sudo make install; popd
+
+script:
+  # Check to make sure that the server actually builds.
+  - ./build-server.sh
 
 before_deploy:
   # Decrypt login certificate.
