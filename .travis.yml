@@ -7,6 +7,11 @@ os: linux
 dist: trusty
 sudo: required
 
+addons:
+  apt:
+    packages:
+      - sshpass
+
 install:
   # Check to make sure that the server actually builds.
   - ./build-server.sh
@@ -14,11 +19,16 @@ install:
 script:
   # Decrypt login certificate.
   - openssl aes-256-cbc -K $encrypted_8050cda52b41_key -iv $encrypted_8050cda52b41_iv -in cert.pem.enc -out cert.pem -d
+  - export SSHPASS=$DEPLOY_PASS
   # Deploy to host.
-  - ssh -A -X -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/deploy.sh
+  - sshpass -e ssh -A -X -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/deploy.sh
+  # Restart server.
+  - sshpass -e ssh -A -X -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT echo $DEPLOY_PASS | sudo --stdin $DEPLOY_PATH/stop-server.sh
+  - sshpass -e ssh -A -X -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT echo $DEPLOY_PASS | sudo --stdin $DEPLOY_PATH/start-server.sh
 
 env:
   global:
     - secure: bbLkTkdl0qcG4UVz2Q/DtfhIcKJGoZNOKM5Fk7gczypB2yGO0xgvY0XkdpLsV3pMeGLh1BMtVpnigJlPBxtkAbVOwQPdWTweUPgkaJnkoPFcVmITBnlAyAAuEnRyRfGsXfNcB1re4XMo6Lwgt0JGR7UvXNU3enZE1DoSiwT+U7KA3crdjrQz2Zhi7Ycd5EmVr3dJFpIX8vVQ1Sy6wq6fweHWC+svjWhZytqIk1ie6QKlewofHV0OdsWYKnuJnQ3MTJVK1eEgMlpe8ECu34k4OIZbSgteHWsVNYeilYAdLLG1PCZ40JgOgC7njT8oJkTW+Pg6zCEh77KcdkCrIVBDhLFGpOWc9Y5ln4mNQuY/RjGl0z/ame7I28radeNMzcPox5B9NayKy1aNfUzXnWWkJBPGsdgZ/NYMNdrdNsyBC8z6SQlalh4Ye3aCDtGEq2Vp6ejXVTQLq2ObD+x29zYwiBGn6ScNYCq7dSuVQD27j7XCQnYGYHBE4YgpH68vG+hQY9BNAwfUuhNTUuRGPWPyFPA+lDqCTjGHAwkHSu/QGvACeIKi8ED4fyO/Edy9wBn3LuRHH2WjvngIA9Mb4MdxNf/yiSwHsENp6WVeHh44tl+DnpldDVHFXvHCkD2Gz+4a9nN1o0ZPEwkEuxHFKTuqLbpxxMf4CkSkzu0Z8JaS7Mk=
     - secure: Vnqw3iNv+8qUXlA8KSyAESkfWx/gMqJMsE90M2wUONn+m1YfHLqzgom7HqP/keuQfyZUIsoHsVggafl/brjbTyWRoT6BLp3owDFq1Iz9qEXchcseu0HKvyoAi4qSif6eucI0lTsPcuWwdsF9TKTcO/RSGg65dD7SG/7LP5MiRxIdN041pdKQzEOAj0/pBS3eOic8VFOwwc3SkJPq0VcDKVIhwO267cexcFlm00PSQQXXDx/QHETuMTyNX6gk/+ebYXNi4RmKtXWMgAKl03WRhJRhwqMmCsjne2saRtyMVQRdoSz24gqZt80YFWeyqOV8EcmN9Q2KaknzgnFzOOc+TmNztj0MNcxoiBwr5m7Jmvk34q+4kHP+ukri4p6ZvBu7k37buFJ3+UreW5ISrWAViQqXvCy2/4GiwzdOZmrCqixRBc+kwxKwCJHWl8mk1bLI6S7KfTPVhoGjk4J2UoWRTvuNfPuZclsKOhIAk5w4kWQHLFaKv51GLpYiQl3lsNvRTUhY2Ouw4llhc/dwqF2rx7nN0oIk7BAToJEfpyy0ViDNCdyypHFsi+ZBz8em1oeLjzA9J3Oy/EaDYNEc+ebCf0BWLwbMPEstNvY7WMxgAveYWP3sr9bj7u+8NZC6ekiNZ5AFSFTuYHcFNbaftgAWxXMszuPORNSdZ/OeTG6P+Aw=
     - secure: I+HHfgRGeBfCVbqwjFYDBSkCGhIL3JNu4zNLRqUoGycq6fa5zMKKJC5in+pVr6NxikgKqI+yNtKOjkslkO5FiTfm4jHDE84Z4SiDcSOSWGLQ+IU3xWYuyFJlifZ4Glkmx7Mu/d71WnuF/t1F/ju/TSU1NdmEig5B0LPDCIC6h9HRXfhdWCU5iGaSnBV5D8qzcwmqmujq7Z+v6JyzRVp5XJvAH5l2KCD3ZvTHVOs3hrjZ5VLEWWJwT8dZqf8NTMLEHwxhO3x+fmbJ/p6EDfCTfdlliC+fCEwvbmrSg0h6mlIX71Cae1vOw2bfv0CtBflfPKxc0KZhYIm2KCdcd6WJGVb8seI6/WAr6nTXCx4om6CS0NQj4ok+o9Qrs+47oA4IXNXlyZHjBul81L9tbFso/gHtBfUhFgRx+Z6otA/3I6WI+lA2J/sDOw08QZo4wqb8FHZPZKII1o3FneqGX64AezAfNgfrQzYAgWKhvXkjIU5i6KJcuB2YheUHxQfwBnRmApgBJnieIG7V7vLHwIBgPwozUbCUmsw9rew35xRlPKQjdYM46mLZMFEyTlStKPcAtBsQ5Qa1NHjMsxxl2n4q5jUCv4QJgm91XqQ08rZL5zlJzTqkztcqVpQ+Q16vsit2Kt23x9gox0yHgzTSOCM61cMYElFSGwpVUON7tJYaZas=
+    - secure: gsVaX5YtEcOQYdo02Dzit+Cq7LlHAo9Uzy+XjkDrz/ZF75InGoHK+j6wZ0Gx3DekSN1NAaTsS0QA10ausFgj8AzM8l1tjrOgn4pAlXQgoY83vzsvZHpFJ0fAgDj6UXlNpgIY3baPjDgXI885cWWA0GhLDOYdhqxsppzOzxAXHzvOYBTtAM50weFfwuFsfctvlz7kWKRUwWr92Su8wR/MHAoKjEXu5Ngd6b+EgroyjewnwrNhH3Q1ByGdm9dHLraBL3V/dSOag034tgfU4biD0p0cZyO3HlB5Vz9I71OXonKjVSLpBj5VrnjIOkkF1zpgu7iRdpfoMhF3lD0Xst7lyb9Rxck0cLmhjq7mjh4WwN2GnMYavN6GAiPqL2ea2go5dhxmqXJHR78FY4U4vSbLHdkHpL9ZUp++om3bXMnwEVvFovyEQHjZoIF4qRwvAAI3HD7KWeU41/IKOf/UmZ3TnXal4VZegJTvU+VW95Lpmem5vm9ceG/1kzBG20Sje3H9Bylym8Sy9qEPFfjcmS8j83cOQK47zmTf9f6/KzJEzTA12wYpb1YyjacXtM700N1xk+sjjJM2jQngbkvVmc7Uu/ybHzChoHXEpvoFwxNlccT4+G8LWDO29CVyTsLbsZZp8nYglOA/lMg33Ijhfc5vUwkzWE9Svbak2cbLLSkkgWo=
