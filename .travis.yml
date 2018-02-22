@@ -21,13 +21,12 @@ script:
   - sudo chmod 600 cert.pem
   # Be gullible wrt the authenticity of hosts.
   - echo "StrictHostKeyChecking no" | sudo tee -a /etc/ssh/ssh_config
-  # Have the host update, build, stop and restart the server.
+  # Have the host update, build and patch the server.
   - export SSHPASS=$DEPLOY_PASS
   - if [ "$TRAVIS_BRANCH" == "master" ] && [ ! -z "$DEPLOY_USER" ]; then
       sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/update-server.sh &&
       sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/build-server.sh $TRAVIS_BUILD_NUMBER &&
-      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/stop-server.sh $DEPLOY_PASS &&
-      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/start-server.sh $DEPLOY_PASS;
+      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/patch-server.sh $DEPLOY_PASS;
     fi
 
 env:
