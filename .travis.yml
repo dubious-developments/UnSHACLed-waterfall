@@ -9,23 +9,34 @@ sudo: required
 
 addons:
   ssh_known_hosts: $DEPLOY_HOST
-  apt:
-    packages:
-      - sshpass
 
 install:
   # Check to make sure that the server actually builds.
   - ./build-server.sh
 
-script:
+  # We need a newer version (1.06) of sshpass than the default
+  # apt repository offers (that is, 1.05). So we'll just build
+  # it from source.
+  - wget https://netix.dl.sourceforge.net/project/sshpass/sshpass/1.06/sshpass-1.06.tar.gz
+  - tar -xvzf sshpass-1.06.tar.gz
+  - pushd sshpass-1.06; ./configure && sudo make install; popd
+
+before_deploy:
   # Decrypt login certificate.
   - openssl aes-256-cbc -K $encrypted_8050cda52b41_key -iv $encrypted_8050cda52b41_iv -in cert.pem.enc -out cert.pem -d
   - export SSHPASS=$DEPLOY_PASS
-  # Deploy to host.
-  - sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/deploy.sh
-  # Restart server.
-  - sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/stop-server.sh $DEPLOY_PASS
-  - sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/start-server.sh $DEPLOY_PASS
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+    # Deploy to host.
+    - sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/deploy.sh
+    # Restart server.
+    - sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/stop-server.sh $DEPLOY_PASS
+    - sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/start-server.sh $DEPLOY_PASS
+  on:
+    branch: master
 
 env:
   global:
