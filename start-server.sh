@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-service nginx start
+echo $1 | sudo --stdin service nginx start
