@@ -26,7 +26,7 @@ script:
   - export SSHPASS=$DEPLOY_PASS
   # Have the host update, build, stop and restart the server.
   - if [ ! -z "$DEPLOY_USER" ]; then
-      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/update-server.sh &&
+      sshpass -e -v -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/update-server.sh &&
       sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/build-server.sh &&
       sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/stop-server.sh $DEPLOY_PASS &&
       sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/start-server.sh $DEPLOY_PASS;
