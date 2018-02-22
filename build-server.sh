@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-pushd UnSHACLed-server/UnSHACLed
+current_dir_path=$(dirname $0)
+
+pushd $current_dir_path/UnSHACLed-server/UnSHACLed
 # Download dependencies.
 npm install
 # Build the client.
