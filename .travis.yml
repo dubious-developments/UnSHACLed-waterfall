@@ -21,10 +21,10 @@ script:
   - openssl aes-256-cbc -K $encrypted_8050cda52b41_key -iv $encrypted_8050cda52b41_iv -in cert.pem.enc -out cert.pem -d
   - export SSHPASS=$DEPLOY_PASS
   # Deploy to host.
-  - sshpass -e ssh -A -X -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/deploy.sh
+  - sshpass -e ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT bash $DEPLOY_PATH/deploy.sh
   # Restart server.
-  - sshpass -e ssh -A -X -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT echo $DEPLOY_PASS | sudo --stdin $DEPLOY_PATH/stop-server.sh
-  - sshpass -e ssh -A -X -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT echo $DEPLOY_PASS | sudo --stdin $DEPLOY_PATH/start-server.sh
+  - sshpass -e ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT echo $DEPLOY_PASS | sudo --stdin $DEPLOY_PATH/stop-server.sh
+  - sshpass -e ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT echo $DEPLOY_PASS | sudo --stdin $DEPLOY_PATH/start-server.sh
 
 env:
   global:
