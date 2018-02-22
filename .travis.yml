@@ -21,7 +21,7 @@ script:
   # Decrypt login certificate.
   - openssl aes-256-cbc -K $encrypted_8050cda52b41_key -iv $encrypted_8050cda52b41_iv -in cert.pem.enc -out cert.pem -d
   # Be gullible wrt the authenticity of hosts.
-  - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+  - echo "StrictHostKeyChecking no" | sudo tee -a /etc/ssh/ssh_config
   # Have the host update, build, stop and restart the server.
   - export SSHPASS=$DEPLOY_PASS
   - if [ ! -z "$DEPLOY_USER" ]; then
