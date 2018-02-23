@@ -2,7 +2,7 @@
 
 current_dir_path=$(dirname $0)
 
-pushd $current_dir_path/UnSHACLed-server/UnSHACLed
+pushd "$current_dir_path/UnSHACLed-server/UnSHACLed"
 # Download dependencies.
 npm install
 

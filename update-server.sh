@@ -2,7 +2,7 @@
 
 current_dir_path=$(dirname $0)
 
-pushd $current_dir_path
+pushd "$current_dir_path"
 
 # Pull in the latest sources.
 git pull
