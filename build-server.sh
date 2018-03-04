@@ -10,6 +10,6 @@ npm install
 gulp build
 
 # Create a version number file.
-echo "UnSHACLed build $1" > version
+echo "UnSHACLed build $1" > build/version
 
 popd
