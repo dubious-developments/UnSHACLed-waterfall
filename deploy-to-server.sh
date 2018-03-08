@@ -23,10 +23,10 @@ sudo chmod 600 cert.pem
 # Be gullible wrt the authenticity of hosts.
 echo "StrictHostKeyChecking no" | sudo tee -a /etc/ssh/ssh_config
 
-# Have the host clean, update, build and patch the server.
+# Have the host update, clean, build and patch the server.
 export SSHPASS=$DEPLOY_PASS
-sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/clean-server.sh
 sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/update-server.sh
+sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/clean-server.sh
 if [ ! -z "$NIGHTLY" ]; then
   # Grab the latest version of the UnSHACLed server master branch.
   sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT \
