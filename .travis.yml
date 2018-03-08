@@ -25,8 +25,8 @@ script:
   - export SSHPASS=$DEPLOY_PASS
   - if [ "$TRAVIS_BRANCH" == "master" ] && [ ! -z "$DEPLOY_USER" ]; then
       sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/update-server.sh &&
-      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/build-server.sh $TRAVIS_BUILD_NUMBER &&
-      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/patch-server.sh $DEPLOY_PASS 80;
+      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/build-server.sh UnSHACLed $TRAVIS_BUILD_NUMBER &&
+      sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/patch-server.sh $DEPLOY_PASS 80 default;
     fi
 
 env:
