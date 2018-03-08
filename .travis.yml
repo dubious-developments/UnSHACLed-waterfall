@@ -18,7 +18,7 @@ script:
   - ./build-server.sh
   # Deploy the build.
   - if [ "$TRAVIS_BRANCH" == "master" ] && [ ! -z "$DEPLOY_USER" ]; then
-      ./deploy-to-server.sh $encrypted_8050cda52b41_key $encrypted_8050cda52b41_iv;
+      ./deploy-to-server.sh $encrypted_8050cda52b41_key $encrypted_8050cda52b41_iv 80 default;
     fi
 
 env:

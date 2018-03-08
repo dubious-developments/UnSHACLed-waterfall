@@ -12,6 +12,8 @@ set -e
 
 ENCRYPTED_PEM_KEY=$1
 ENCRYPTED_PEM_IV=$2
+DEPLOY_HOST_PORT=$3
+DEPLOY_NAME=$4
 
 # Decrypt login certificate.
 openssl aes-256-cbc -K $ENCRYPTED_PEM_KEY -iv $ENCRYPTED_PEM_IV -in cert.pem.enc -out cert.pem -d
@@ -24,4 +26,4 @@ echo "StrictHostKeyChecking no" | sudo tee -a /etc/ssh/ssh_config
 export SSHPASS=$DEPLOY_PASS
 sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/update-server.sh
 sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/build-server.sh UnSHACLed $TRAVIS_BUILD_NUMBER
-sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/patch-server.sh $DEPLOY_PASS $DEPLOY_PORT $DEPLOY_NAME
+sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/patch-server.sh $DEPLOY_PASS $DEPLOY_HOST_PORT $DEPLOY_NAME
