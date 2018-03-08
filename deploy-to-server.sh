@@ -36,5 +36,5 @@ if [ ! -z "$NIGHTLY" ]; then
   sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT \
   $DEPLOY_PATH/update-server.sh UnSHACLed-server/UnSHACLed https://github.com/dubious-developments/UnSHACLed master;
 fi
-sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/build-server.sh UnSHACLed $TRAVIS_BUILD_NUMBER
+sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/build-server.sh "$NIGHTLY" $TRAVIS_BUILD_NUMBER
 sshpass -e -Passphrase ssh -A -i cert.pem $DEPLOY_USER@$DEPLOY_HOST -oPort=$DEPLOY_PORT $DEPLOY_PATH/patch-server.sh $DEPLOY_PASS $DEPLOY_HOST_PORT $DEPLOY_NAME
