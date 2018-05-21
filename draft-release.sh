@@ -17,8 +17,11 @@ git submodule update --recursive --init
 # Pull in latest versions of submodules. Update recursively.
 pushd UnSHACLed-server
 pushd UnSHACLed
-git pull origin master
+git checkout master
+git pull
 popd
+git checkout master
+git pull
 git add .
 git commit -m "Update UnSHACLed client to latest version"; git push origin master
 popd
