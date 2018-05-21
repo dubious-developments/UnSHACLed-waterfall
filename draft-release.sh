@@ -20,8 +20,7 @@ pushd UnSHACLed
 git pull origin master
 popd
 git add .
-git commit -m "Update UnSHACLed client to latest version"
-git push origin master
+git commit -m "Update UnSHACLed client to latest version"; git push origin master
 popd
 
 pushd UnSHACLed-collaboration-server
@@ -30,7 +29,7 @@ popd
 
 git add .
 git commit -m "Update UnSHACLed server to latest version"
-git push --set-upstream origin $RELEASE_BRANCH
+git push -f --set-upstream origin $RELEASE_BRANCH
 
 # Switch back to current branch.
 git checkout $CURRENT_BRANCH
