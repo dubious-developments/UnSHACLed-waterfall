@@ -23,7 +23,7 @@ popd
 git checkout master
 git pull
 git add .
-git commit -m "Update UnSHACLed client to latest version"; git push origin master
+git commit -m "Update UnSHACLed client to latest version"; git push origin master || true
 popd
 
 pushd UnSHACLed-collaboration-server
