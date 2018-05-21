@@ -1,3 +1,6 @@
 [submodule "UnSHACLed-server"]
 	path = UnSHACLed-server
 	url = https://github.com/dubious-developments/UnSHACLed-server
+[submodule "UnSHACLed-collaboration-server"]
+	path = UnSHACLed-collaboration-server
+	url = https://github.com/dubious-developments/UnSHACLed-collaboration-server
